@@ -1,0 +1,223 @@
+
+%%%% parameters %%%%
+pars.k1 = 0.0045;
+pars.k2 = 0.000125;
+pars.k4 = 0.1;
+pars.k5g = 0.064;
+pars.k6 = 0.000125;
+pars.k7 = 0.2; 
+pars.k8 = 0.1;
+pars.k9 = 1;
+pars.k10 = 0.1;
+pars.k11 = 0.000125;
+pars.k12 = 0.00053;
+pars.kf13 = 0.1;
+pars.kr13 = 0;
+pars.kf14 = 5;
+pars.kr14 = 0;
+pars.kf15 = 0.002;
+pars.kr15 = 0;
+pars.k16 = 0.5;
+pars.k17 = 0.0004;
+pars.k18 = 0.0003;
+pars.k20 = 5e-07;
+pars.k19 = 0;
+pars.k21 = 0.0001;
+pars.k22 = 0.5;
+pars.kf23 = 0.001;
+pars.kr23 = 0.0005;
+pars.k27 = 0.0004;
+pars.kf28 = 0.01;
+pars.kr28 = 0;
+pars.k26 = 3.4e-07;
+pars.K1g = 0.064;
+pars.Kn = 0.04;
+pars.K1 = 0.016;
+pars.kbA20 = 0.0018;
+pars.kp = 0.0006;
+pars.k1h = 1.2e-06;
+pars.k1ha = 7.6e-07; %k1'h
+pars.k2h = 1e-05;
+pars.k2a = 0.0001; %k'2
+pars.k3h = 0.001;
+pars.k3ha = 1e-05; %k3'h
+pars.V4 = 0.0625;
+pars.K4 = 0.001;
+pars.k23 = 0.0001;
+pars.k23a = 0.002; %k23'
+pars.k24 = 0.00985;
+pars.k24a = 9.85e-05; %k24'
+pars.k25 = 0.0458;
+pars.k25a = 4.7e-05; %k25'
+pars.V26 = 2.62;
+pars.K26 = 3.68;
+pars.k29 = 0.507;
+pars.k_29 = 0.234;
+pars.V30 = 0.02;
+pars.K30 = 0.08;
+pars.R30_K32 = 0.08;
+pars.R32_K32 = 0.08;
+pars.V32 = 0.02;
+pars.k31 = 0.000107;
+pars.K31 = 0.00435;
+pars.k33 = 0.000211;
+pars.K33 = 0.012;
+pars.k34 = 1e-06;
+pars.k3g = 0.000225;
+pars.d3 = 2.8e-14;
+pars.d8p = 0.00021667;
+pars.d7 = 0.00023333;
+pars.k8g = 3.2e-13;
+pars.d8 = 0.0005;
+pars.d6 = 0.018;
+pars.k6g = 4.2667e-07;
+pars.d9 = 0.012;
+pars.d9p = 6e-07;
+pars.k9g = 9.6e-07;
+pars.k9p = 4e-15;
+pars.d5 = 0.006;
+pars.k7g = 0.5;
+pars.nucleus = 1;
+pars.Cytoplasm = 1;
+pars.k3 = 2.5e-06;
+
+%%% initial conditions %%%%
+nNFkB_nIkBa0 = 0;
+nNFkB0 = 0;
+nIkBa0 = 0;
+mRNAIkBa0 = 0;
+mRNAA200 = 0;
+Cytoplasm_A200 = 0;
+IKKi0 = 0;
+IKKa0 = 0;
+IKKn0 = 0;
+NFkB_IkBa0 = 0.16;
+IKKa_IkBa0 = 0;
+NFkB_IkBa_IKKa0 = 0;
+IkBa0 = 0;
+NFkB0 = 0;
+ErbB40 = 0.08;
+HRG0 = 0.01;
+R_HRG0 = 0;
+R_HRG20 = 0;
+RP0 = 0;
+PI3K0 = 0.01;
+R_PI3K0 = 0;
+R_PI3Ka0 = 0;
+PI3Ka0 = 0;
+AKT0 = 0.01;
+AKT_PIP30 = 0;
+AKT_PIP0 = 0;
+AKT_PIP20 = 0;
+PIP20 = 0.08;
+PIP30 = 0;
+MDM2t0 = 0.008;
+MDM2p0 = 0.016;
+P530 = 0.016;
+PTEN0 = 0;
+MDM20 = 0.008;
+deg60 = 0;
+deg50 = 0;
+deg40 = 0;
+deg20 = 0;
+deg30 = 0;
+deg10 = 0;
+deg70 = 0;
+nucleus_A200 = 0;
+IKK0 = 0;
+PDK0 = 0.001;
+pars.PP2A = 1.14e-05;
+k3 = 2.5e-06;
+
+
+ics=[nNFkB_nIkBa0  nNFkB0  nIkBa0  mRNAIkBa0  mRNAA200 Cytoplasm_A200 IKKi0 IKKa0 ...
+    IKKn0 NFkB_IkBa0 IKKa_IkBa0 NFkB_IkBa_IKKa0 IkBa0 NFkB0 ErbB40 HRG0 R_HRG0 ...
+    R_HRG20 RP0 PI3K0 R_PI3K0 R_PI3Ka0 PI3Ka0 AKT0 AKT_PIP30 AKT_PIP0 AKT_PIP20 ...
+    PIP20 PIP30 MDM2t0 MDM2p0 P530 PTEN0 MDM20];
+
+%%%% simulation time
+tend=24000;
+options = [];
+[t,v] = ode15s('NFKB_ode_eqnsV2',[0 tend],ics,options,pars);
+
+nNFkB_nIkBa = v(:,1);
+nNFkB = v(:,2);
+nIkBa = v(:,3);
+mRNAIkBa = v(:,4);
+mRNAA20 = v(:,5);
+Cytoplasm_A20 = v(:,6);
+IKKi = v(:,7);
+IKKa = v(:,8);
+IKKn = v(:,9);
+NFkB_IkBa = v(:,10);
+IKKa_IkBa = v(:,11);
+NFkB_IkBa_IKKa = v(:,12);
+IkBa = v(:,13);
+NFkB = v(:,14);
+ErbB4 = v(:,15);
+HRG = v(:,16);
+R_HRG = v(:,17);
+R_HRG2 = v(:,18);
+RP = v(:,19);
+PI3K = v(:,20);
+R_PI3K = v(:,21);
+R_PI3Ka = v(:,22);
+PI3Ka = v(:,23);
+AKT = v(:,24);
+AKT_PIP3 = v(:,25);
+AKT_PIP = v(:,26);
+AKT_PIP2 = v(:,27);
+PIP2 = v(:,28);
+PIP3 = v(:,29);
+MDM2t = v(:,30);
+MDM2p = v(:,31);
+P53 = v(:,32);
+PTEN = v(:,33);
+MDM2 = v(:,34);
+% deg6 = v(:,35);
+% deg5 = v(:,36);
+% deg4 = v(:,37);
+% deg2 = v(:,38);
+% deg3 = v(:,39);
+% deg1 = v(:,40);
+% deg7 = v(:,41);
+% nucleus_A20 = v(:,42);
+% IKK = v(:,43);
+% PDK = v(:,44);
+% PP2A = v(:,45);
+
+
+
+%%%% plot results %%%%
+figure(1)
+clf
+
+subplot(2,3,1)
+plot(t,nNFkB,'b','linewidth',2)
+ylabel('nNFkB')
+xlabel('time')
+
+subplot(2,3,2)
+plot(t,P53,'b','linewidth',2)
+ylabel('P53')
+xlabel('time')
+
+subplot(2,3,3)
+plot(t,R_HRG,'b','linewidth',2)
+ylabel('RHRG')
+xlabel('time')
+
+subplot(2,3,4)
+plot(t,R_HRG2,'b','linewidth',2)
+ylabel('RHRG2')
+xlabel('time')
+
+subplot(2,3,5)
+plot(t,RP,'b','linewidth',2)
+ylabel('RP')
+xlabel('time')
+
+subplot(2,3,6)
+plot(t,RP+R_HRG2,'b','linewidth',2)
+ylabel('RP')
+xlabel('time')

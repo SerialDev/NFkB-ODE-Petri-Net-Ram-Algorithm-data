@@ -1,0 +1,463 @@
+%%%%% NFKB petri model (using Ram algorithm) %%%%%
+% clear
+%%%%% Initial tokens %%%%%%%%%%%
+P1 = 8000; % ERB4
+P2 = 1000; % HRG
+P3 = 100; % RHRG
+P4 = 100; % RHRG2
+P5 = 100; % RP
+P6 = 1000; % PI3K
+P7 = 100; % RPI3K
+P8 = 100; % RPI3Ka
+P9 = 100; % PI3Ka
+P10 = 8000; % PIP2
+P11 = 100; % PIP3
+P12 = 1000; % AKT
+P13 = 100; % AKTPIP3
+P14 = 100; % AKTPIP
+P15 = 100; % PDK
+P16 = 100; % AKTPIP2
+P17 = 100; % PP2A
+P18 = 100; % IKK
+P19 = 100; % IKKa
+P20 = 16000; % NFkBIkBa
+P21 = 100; % NFkB
+P22 = 100; % IkBp
+P23 = 100; % nNFkB
+P24 = 100; % IkBt
+P25 = 100; % IkBa
+P26 = 100; % nNFkBIkBa
+P27 = 100; % A20t
+P28 = 100; % nA20
+P29 = 1600; % P53
+P30 = 800; % MDM2t
+P31 = 1600; % MDM2
+P32 = 100; % MDM2p
+P33 = 100; % PTEN
+%Added for Lipniacky
+P34 = 100; % nIkBa
+P35 = 100; % mRNAIkBa
+P36 = 100; % mRNAA20
+P37 = 100; % cytoA20
+P38 = 100; % IKKi
+P39 = 100; % IKKn
+P40 = 100; % IKKaIkBa
+P41 = 100; % NFkBIkBaIKKa
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+transitions=49; % number of transitions
+blocks=30; %number of blocks
+runs=5; %number of repeats
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+P0=[P1 P2 P3 P4 P5 P6 P7 P8 P9 P10 ...
+    P11 P12 P13 P14 P15 P16 P17 P18 P19 P20 ...
+    P21 P22 P23 P24 P25 P26 P27 P28 P29 P30 ...
+    P31 P32 P33 P34 P35 P36 P37 P38 P39 P40 P41]; %%% places vector
+P1BR=[]; P2BR=[]; P3BR=[]; P4BR=[]; P5BR=[]; P6BR=[]; P7BR=[]; P8BR=[]; P9BR=[]; P10BR=[];
+P11BR=[]; P12BR=[]; P13BR=[]; P14BR=[]; P15BR=[]; P16BR=[]; P17BR=[]; P18BR=[]; P19BR=[]; P20BR=[];
+P21BR=[]; P22BR=[]; P23BR=[]; P24BR=[]; P25BR=[]; P26BR=[]; P27BR=[]; P28BR=[]; P29BR=[]; P30BR=[];
+P31BR=[]; P32BR=[]; P33BR=[]; P34BR=[]; P35BR=[]; P36BR=[]; P37BR=[]; P38BR=[]; P39BR=[]; P40BR=[];
+P41BR=[];
+
+%%%% main block loop %%%%%
+for k=1:runs
+    % re-initialize quantities for each run
+    P=P0;
+    P1=P(1); P2=P(2); P3=P(3); P4=P(4); P5=P(5); P6=P(6); P7=P(7); P8=P(8); P9=P(9); P10=P(10);
+    P11=P(11); P12=P(12); P13=P(13); P14=P(14); P15=P(15); P16=P(16); P17=P(17); P18=P(18); P19=P(19); P20=P(20);
+    P21=P(21); P22=P(22); P23=P(23); P24=P(24); P25=P(25); P26=P(26); P27=P(27); P28=P(28); P29=P(29); P30=P(30);
+    P31=P(31); P32=P(32); P33=P(33); 
+    PB=[P0]; %%block (only) output. 
+for i=1:blocks
+    trans=randperm(transitions); %% randomly order transitions
+    for j=1:transitions
+        if trans(j)==1 & min(P1,P2)>0 %ErB4 + HRG -> R-HRG 
+            RT1=ceil(min(P1,P2)*rand); %random number associated with firings
+            P1=P1-RT1;
+            P2=P2-RT1;
+            P3=P3+RT1;
+            
+        elseif trans(j)==2 & P3>1 %R-HRG + R-HRG -> RHRG2
+            A=2:2:P3; %dimerisation 
+            B=A(randperm(length(A)));
+            P3=P3-B(1);
+            P4=P4+B(1)/2;
+            
+        elseif trans(j)==3 & P4>0 % RHRG2 -> RP
+            RT3=ceil(P4*rand); %random number associated with firings
+            P4=P4-RT3;
+            P5=P5+RT3;
+            
+        elseif trans(j)==4 & P5>0 % RP -> RHRG2
+            RT4=ceil(P5*rand); %random number associated with firings
+            P4=P4+RT4;
+            P5=P5-RT4;
+      
+        elseif trans(j)==5 & P5>0 % RP -> deg
+            RT5=ceil(P5*rand); %random number associated with firings
+            P5=P5-RT5;
+       
+        elseif trans(j)==6 & min(P5,P6)>0 % RP + PI3K -> RPI3K
+            RT6=ceil(min(P5,P6)*rand); %random number associated with firings
+            P5=P5-RT6;
+            P6=P6-RT6;
+            P7=P7+RT6;
+            
+        elseif trans(j)==7 & P7>0 % RPI3K -> RPI3Ka
+            RT7=ceil(P7*rand); %random number associated with firings
+            P7=P7-RT7;
+            P8=P8+RT7;
+           
+        elseif trans(j)==8 & P8>0 % RPI3Ka -> RP + PI3Ka
+            RT8=ceil(P8*rand); %random number associated with firings
+            P5=P5+RT8;
+            P8=P8-RT8;
+            P9=P9+RT8;
+            
+        elseif trans(j)==9 & P9>0 % PI3Ka -> PI3K
+            RT9=ceil(P9*rand); %random number associated with firings
+            P9=P9-RT9;
+            P6=P6+RT9;
+            
+        elseif trans(j)==10 & P9>0 % PI3Ka induced PIP2 -> PIP3
+            RT10=ceil(P9*rand); %random number associated with firings
+            P10=P10-RT10;
+            P11=P11+RT10;
+            
+        elseif trans(j)==11 & min(P11,P12)>0 % PIP3 + AKT -> AKTPIP3
+            RT11=ceil(min(P11,P12)*rand); %random number associated with firings
+            P11=P11-RT11;
+            P12=P12-RT11;
+            P13=P13+RT11;
+            
+        elseif trans(j)==12 & min(P13,P15)>0  % PDK induced AKTPIP3 -> AKTPIP
+            RT12=ceil(min(P13,P15)*rand); %random number associated with firings
+            P13=P13-RT12;
+            P14=P14+RT12;
+            
+        elseif trans(j)==13 & min(P14,P15)>0   % PDK induced AKTPIP -> AKTPIP2
+            RT13=ceil(min(P14,P15)*rand);
+            P14=P14-RT13;
+            P16=P16+RT13;
+            
+        elseif trans(j)==14 & min(P16,P17)>0  % PP2A induced AKTPIP2 -> AKTPIP 
+            RT14=ceil(min(P16,P17)*rand); %random number associated with firings
+            P16=P16-RT14;
+            P14=P14+RT14;
+            
+        elseif trans(j)==15 & min(P14,P17)>0  % PP2A induced AKTPIP -> AKTPIP3
+            RT15=ceil(min(P14,P17)*rand);
+            P14=P14-RT15;
+            P13=P13+RT15;
+            
+            %%%%%% end of cascade Beginning of NFkB %%%%%%%%5
+            
+            
+        elseif trans(j)==16 & min(P16,P39)>0 % AKTPIP2 induced IKKn -> IKKa
+            RT15=ceil(min(P16,P39)*rand); %random number associated with firings
+            P39=P39-RT15;
+            P19=P19+RT15;
+        
+        elseif trans(j)==17 & P39>0 % IKKn -> deg
+            RT16=ceil(P39*rand); %random number associated with firings
+            P39=P39-RT16;
+            
+        elseif trans(j)==18 & min(P19,P28)>0 % A20 induced IKKa -> IKKi
+            RT17=ceil(min(P19,P28)*rand); %random number associated with firings
+            P28=P28-RT17;
+            P38=P38+RT17; 
+            
+        elseif trans(j)==19 & P38>0 % IKKi -> deg
+            RT18=ceil(P38*rand); %random number associated with firings
+            P38=P38-RT18;
+            
+        elseif trans(j)==20 & min(P19,P25)>0 % IkBa + IKKa -> IKKaIkBa
+            RT19=ceil(min(P19,P25)*rand); %random number associated with firings
+            P19=P19-RT19;
+            P25=P25-RT19;
+            P40=P40+RT19;    
+            
+        elseif trans(j)==21 & P40>0 % IKKaIkBa -> IKKa
+            RT20=ceil(P40*rand); %random number associated with firings
+            P40=P40-RT20;
+            P19=P19+RT20;    
+            
+        elseif trans(j)==22 & P19>0 % IKKa -> deg
+            RT21=ceil(P19*rand); %random number associated with firings
+            P19=P19-RT21;    
+            
+        elseif trans(j)==23 & min(P19,P20)>0 % IKKa induced NFkBIkBa -> NFkB
+            RT22=ceil(min(P19,P20)*rand); %random number associated with firings
+            P20=P20-RT22;
+            P21=P21+RT22;     
+            
+        elseif trans(j)==24 & P41>0 % NFkBIkBaIKKa -> NFkB + IKKa
+            RT23=ceil(P41*rand); %random number associated with firings
+            P21=P21+RT23;
+            P41=P41-RT23;
+            P19=P19+RT23;    
+            
+        elseif trans(j)==25 & min(P19,P26)>0 % NFkBIkBa + IKKa -> NFkBIkBaIKKa
+            RT24=ceil(min(P19,P26)*rand); %random number associated with firings
+            P19=P19-RT24;
+            P26=P26-RT24;
+            P41=P41+RT24;       
+            
+        elseif trans(j)==26 & min(P21,P25)>0 % IkBa + NFkB -> NFkBIkBa
+            RT25=ceil(min(P21,P25)*rand); %random number associated with firings
+            P21=P21-RT25;
+            P25=P25-RT25;
+            P20=P20+RT25;     
+            
+        elseif trans(j)==27 & P20>0 % NFkBIkBa -> NFkB + IkBa
+            RT26=ceil(P20*rand); %random number associated with firings
+            P21=P21+RT26;
+            P20=P20-RT26;
+            P25=P25+RT26;
+            
+        elseif trans(j)==28 & P25>0 % IkBa -> deg
+            RT27=ceil(P25*rand); %random number associated with firings
+            P25=P25-RT27;    
+            
+        elseif trans(j)==29 & P25>0 % IkBa -> 5nIkBa
+            RT28=ceil(P25*rand); %random number associated with firings
+            P25=P25-(RT28);
+            P34=P34+(RT28);  %%%%%%%%%Verify nuclear translocation factor
+            
+        elseif trans(j)==30 & P34>0 % 5nIkBa -> IkBa
+            RT29=ceil(P34*rand); %random number associated with firings
+            P34=P34- (RT29); 
+            P25=P25+(RT29); %%%%%%%%%Verify nuclear translocation factor     
+            
+        elseif trans(j)==31 & P21>0 % NFkB -> 5nNFkB
+            RT30=ceil(P21*rand); %random number associated with firings
+            P21=P21-(RT30);
+            P23=P23+(RT30);  %%%%%%%%%Verify nuclear translocation factor    
+            
+        elseif trans(j)==32 & P23>0 % 5nNFkB -> NFkB
+            RT31=ceil(P23*rand); %random number associated with firings
+            P23=P23-(RT31);
+            P21=P21+(RT31);  %%%%%%%%%Verify nuclear translocation factor   
+            
+        elseif trans(j)==33 & min(P23,P34)>0 % nNFkB + nIkBa -> nNFkBIkBa
+            RT32=ceil(min(P23,P34)*rand); %random number associated with firings
+            P23=P23-RT32;
+            P34=P34-RT32;
+            P26=P26+RT32;    
+            
+        elseif trans(j)==34 & P26>0 % nNFkBIkBa -> nNFkB + nIkBa
+            RT33=ceil(P26*rand); %random number associated with firings
+            P23=P23+RT33;
+            P26=P26-RT33;
+            P34=P34+RT33;   
+            
+        elseif trans(j)==35 & P20>0 % NFkBIkBa -> 5nNFkBIkBa
+            RT34=ceil(P20*rand); %random number associated with firings
+            P20=P20-(RT34);
+            P26=P26+(RT34);  %%%%%%%%%Verify nuclear translocation factor    
+            
+        elseif trans(j)==36 & P26>0 % 5nNFkBIkBa -> NFkBIkBa
+            RT35=ceil(P26*rand); %random number associated with firings
+            P26=P26-(RT35);
+            P20=P20+(RT35);  %%%%%%%%%Verify nuclear translocation factor   
+            
+        elseif trans(j)==37 & min(P23,P34)>0 % nNFkB induced nIkBa -> mRNAIkBa
+            RT36=ceil(min(P23,P34)*rand); %random number associated with firings
+            P34=P34-RT36;
+            P35=P35+RT36;     
+            
+        elseif trans(j)==38 & P36>0 % mRNAA20 -> deg
+            RT37=ceil(P36*rand); %random number associated with firings
+            P36=P36-RT37;    
+            
+        elseif trans(j)==39 & min(P36,P27)>0 % mRNAA20 induced A20t -> A20
+            RT38=ceil(min(P36,P27)*rand); %random number associated with firings
+            P27=P27-RT38;
+            P28=P28+RT38; %%%%may need changes to mRNAA20 induced A20
+            
+        elseif trans(j)==40 & P28>0 % A20 -> deg
+            RT39=ceil(P28*rand); %random number associated with firings
+            P28=P28-RT39;  
+            
+        elseif trans(j)==41 & P35>0 % mRNAIkBa -> deg
+            RT40=ceil(P35*rand); %random number associated with firings
+            P35=P35-RT40;
+            
+        elseif trans(j)==42 & min(P35,P24)>0 % mRNAIkBa induced IkBt -> nIkBa
+            RT41=ceil(min(P35,P24)*rand); %random number associated with firings
+            P24=P24-RT41;
+            P34=P34+RT41; %%%%may need changes to mRNAIkBa induced nIkBa    
+            
+        elseif trans(j)==43 & P38>0 % IKKi -> IKKn
+            RT42=ceil(P38*rand); %random number associated with firings
+            P38=P38-RT42;
+            P39=P39+RT42;    
+            
+            %%%%% null-> PTEN self production loop needed
+            
+        elseif trans(j)==41 & P35>0 % mRNAIkBa -> deg
+            RT40=ceil(P35*rand); %random number associated with firings
+            P35=P35-RT40;    
+            
+        elseif trans(j)==42 & P23>0 % nNFkB induced mRNAA20
+            RT41=ceil(P23*rand); %random number associated with firings
+            P36=P36+RT41;   
+            
+        elseif trans(j)==43 & P23>0 % nNFkB induced P53
+            RT42=ceil(P23*rand); %random number associated with firings
+            P29=P29+RT42; 
+            
+        elseif trans(j)==44 & min(P29,P32)>0 % MDM2p induced P53 -> deg
+            RT43=ceil(min(P29,P32)*rand); %random number associated with firings
+            P29=P29-RT43;   
+        
+        elseif trans(j)==45 & P29>0 % P53 induced MDM2t
+            RT44=ceil(P29*rand); %random number associated with firings
+            P30=P30+RT44;     
+            
+        elseif trans(j)==46 & P30>0 % MDM2t -> MDM2
+            RT45=ceil(P30*rand); %random number associated with firings
+            P30=P30-RT45;
+            P31=P31+RT45;
+            
+        elseif trans(j)==47 & min(P16,P31)>0 % AKTPIP2 induced MDM2 -> MDM2p
+            RT46=ceil(min(P16,P31)*rand); %random number associated with firings
+            P31=P31-RT46;
+            P32=P32+RT46;  
+            
+        elseif trans(j)==48 & P29>0 % P53 induced PTEN
+            RT47=ceil(P29*rand); %random number associated with firings
+            P33=P33+RT47; 
+            
+       elseif trans(j)==49 & P33>0 % PTEN -> deg
+            RT48=ceil(P33*rand); %random number associated with firings
+            P33=P33-RT48;
+            
+       elseif trans(j)==50 & min(P11,P33)>0 % PTEN induced PIP3 -> PIP2
+            RT49=ceil(min(P11,P33)*rand); %random number associated with firings
+            P11=P11-RT49;
+            P10=P10+RT49;  
+            
+     
+            
+        end
+        P=[P; P1 P2 P3 P4 P5 P6 P7 P8 P9 P10 ...
+              P11 P12 P13 P14 P15 P16 P17 P18 P19 P20 ...
+              P21 P22 P23 P24 P25 P26 P27 P28 P29 P30 ...
+              P31 P32 P33 P34 P35 P36 P37 P38 P39 P40 P41]
+    end
+    PB=[PB; P(end,:)];
+end
+P1BR=[P1BR; PB(:,1)'];
+P2BR=[P2BR; PB(:,2)'];
+P3BR=[P3BR; PB(:,3)'];
+P4BR=[P4BR; PB(:,4)'];
+P5BR=[P5BR; PB(:,5)'];
+P6BR=[P6BR; PB(:,6)'];
+P7BR=[P7BR; PB(:,7)'];
+P8BR=[P8BR; PB(:,8)'];
+P9BR=[P9BR; PB(:,9)'];
+P10BR=[P10BR; PB(:,10)'];
+P11BR=[P11BR; PB(:,11)'];
+P12BR=[P12BR; PB(:,12)'];
+P13BR=[P13BR; PB(:,13)'];
+P14BR=[P14BR; PB(:,14)'];
+P15BR=[P15BR; PB(:,15)'];
+P16BR=[P16BR; PB(:,16)'];
+P17BR=[P17BR; PB(:,17)'];
+P18BR=[P18BR; PB(:,18)'];
+P19BR=[P19BR; PB(:,19)'];
+P20BR=[P20BR; PB(:,20)'];
+P21BR=[P21BR; PB(:,21)'];
+P22BR=[P22BR; PB(:,22)'];
+P23BR=[P23BR; PB(:,23)'];
+P24BR=[P24BR; PB(:,24)'];
+P25BR=[P25BR; PB(:,25)'];
+P26BR=[P26BR; PB(:,26)'];
+P27BR=[P27BR; PB(:,27)'];
+P28BR=[P28BR; PB(:,28)'];
+P29BR=[P29BR; PB(:,29)'];
+P30BR=[P30BR; PB(:,30)'];
+P31BR=[P31BR; PB(:,31)'];
+P32BR=[P32BR; PB(:,32)'];
+P33BR=[P33BR; PB(:,33)'];
+P34BR=[P34BR; PB(:,34)'];
+P35BR=[P35BR; PB(:,35)'];
+P36BR=[P36BR; PB(:,36)'];
+P37BR=[P37BR; PB(:,37)'];
+P38BR=[P38BR; PB(:,38)'];
+P39BR=[P39BR; PB(:,39)'];
+P40BR=[P40BR; PB(:,40)'];
+P41BR=[P41BR; PB(:,41)'];
+end
+
+
+
+%%% plot results
+figure(1)
+clf
+subplot(4,4,1)
+errorbar(0:blocks,mean(P1BR),zeros(blocks+1,1),std(P1BR),'k','linewidth',2)
+hold on
+plot(0:blocks,mean(P1BR),'r','linewidth',2)
+ylabel('ERB4')
+xlabel('Blocks')
+set(gca,'XLim',[0 blocks])
+
+subplot(4,4,2)
+errorbar(0:blocks,mean(P2BR),zeros(blocks+1,1),std(P2BR),'k','linewidth',2)
+hold on
+plot(0:blocks,mean(P2BR),'r','linewidth',2)
+ylabel('HRG')
+xlabel('Blocks')
+set(gca,'XLim',[0 blocks])
+
+subplot(4,4,3)
+errorbar(0:blocks,mean(P3BR),zeros(blocks+1,1),std(P3BR),'k','linewidth',2)
+hold on
+plot(0:blocks,mean(P3BR),'r','linewidth',2)
+ylabel('RHRG')
+xlabel('Blocks')
+set(gca,'XLim',[0 blocks])
+
+subplot(4,4,4)
+errorbar(0:blocks,mean(P4BR),zeros(blocks+1,1),std(P4BR),'k','linewidth',2)
+hold on
+plot(0:blocks,mean(P4BR),'r','linewidth',2)
+ylabel('RHRG2')
+xlabel('Blocks')
+set(gca,'XLim',[0 blocks])
+
+subplot(4,4,5)
+errorbar(0:blocks,mean(P5BR),zeros(blocks+1,1),std(P5BR),'k','linewidth',2)
+hold on
+plot(0:blocks,mean(P5BR),'r','linewidth',2)
+ylabel('RP')
+xlabel('Blocks')
+set(gca,'XLim',[0 blocks])
+% 
+% subplot(4,4,6)
+% errorbar(0:blocks,mean(P5BR)+mean(P4BR),zeros(blocks+1,1),std(P5BR)+std(P4BR),'k','linewidth',2)
+% hold on
+% plot(0:blocks,mean(P5BR)+mean(P4BR),'r','linewidth',2)
+% ylabel('RHRG2+RP')
+% xlabel('Blocks')
+% set(gca,'XLim',[0 blocks])
+
+subplot(4,4,6)
+errorbar(0:blocks,mean(P21BR),zeros(blocks+1,1),std(P21BR),'k','linewidth',2)
+hold on
+plot(0:blocks,mean(P21BR),'r','linewidth',2)
+ylabel('NFKB')
+xlabel('Blocks')
+set(gca,'XLim',[0 blocks])
+
+subplot(4,4,7)
+errorbar(0:blocks,mean(P23BR),zeros(blocks+1,1),std(P23BR),'k','linewidth',2)
+hold on
+plot(0:blocks,mean(P23BR),'r','linewidth',2)
+ylabel('nNFKB')
+xlabel('Blocks')
+set(gca,'XLim',[0 blocks])
